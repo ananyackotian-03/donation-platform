@@ -56,7 +56,7 @@ exports.getRequests = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Server error",
-      error
+      error: error.message
     })
   }
 }
@@ -75,7 +75,7 @@ exports.getRequestById = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Server error",
-      error
+      error: error.message
     })
   }
 }
@@ -106,7 +106,7 @@ exports.getMyRequestsSent = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Server error",
-      error
+      error: error.message
     })
   }
 }
