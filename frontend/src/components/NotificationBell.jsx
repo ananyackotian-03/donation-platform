@@ -27,12 +27,10 @@ export default function NotificationBell() {
       setLoading(true);
       setError(null);
       const headers = { Authorization: `Bearer ${token}` };
-      
-      // Both donors and orgs use the same notifications endpoint
+
       const response = await axios.get('http://localhost:5000/api/requests/notifications', { headers });
       const notifications = response.data || [];
-      
-      console.log('Notifications:', notifications);
+
       setNotifications(notifications);
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -102,10 +100,11 @@ export default function NotificationBell() {
             ) : (
               <div className="notifications-list">
                 {notifications.map((notification, index) => (
-                  <div
+                  <button
                     key={index}
                     className="notification-item"
                     onClick={() => handleNotificationClick(notification)}
+                    type="button"
                   >
                     <div className="notification-content">
                       <p className="notification-message">
@@ -116,7 +115,7 @@ export default function NotificationBell() {
                       </small>
                     </div>
                     <span className="notification-arrow">→</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -141,6 +140,15 @@ export default function NotificationBell() {
         <div 
           className="notification-backdrop"
           onClick={() => setShowDropdown(false)}
+          role="button"
+          tabIndex={0}
+          aria-label="Close notification menu"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setShowDropdown(false);
+            }
+          }}
         />
       )}
     </div>

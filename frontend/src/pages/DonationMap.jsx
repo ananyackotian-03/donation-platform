@@ -40,14 +40,11 @@ export default function DonationMap() {
           fetchNearbyDonations(latitude, longitude, radius);
         },
         (error) => {
-          console.error('Geolocation error:', error);
           setLoading(false);
-          // Fallback: fetch all donations with location
           fetchAllDonationsWithLocation();
         }
       );
     } else {
-      console.error('Geolocation not supported');
       fetchAllDonationsWithLocation();
     }
   }, []);
@@ -68,8 +65,6 @@ export default function DonationMap() {
       const data = await response.json();
       setDonations(data);
       addMarkersToMap(data, lat, lng);
-    } catch (error) {
-      console.error('Error fetching nearby donations:', error);
     } finally {
       setLoading(false);
     }
@@ -85,14 +80,11 @@ export default function DonationMap() {
       
       if (donationsWithLocation.length > 0) {
         addMarkersToMap(donationsWithLocation);
-        // Fit map to show all markers
         const bounds = L.latLngBounds(
           donationsWithLocation.map(d => [d.latitude, d.longitude])
         );
         mapInstance.current.fitBounds(bounds);
       }
-    } catch (error) {
-      console.error('Error fetching donations:', error);
     } finally {
       setLoading(false);
     }
@@ -195,7 +187,7 @@ export default function DonationMap() {
                 min="1"
                 max="50"
                 value={radius}
-                onChange={(e) => setRadius(parseInt(e.target.value))}
+                onChange={(e) => setRadius(Number.parseInt(e.target.value))}
               />
               <div className="radius-display">
                 <span>{radius} km</span>
@@ -212,7 +204,7 @@ export default function DonationMap() {
             ) : (
               <div className="donations-list">
                 {donations.map((donation) => (
-                  <div
+                  <button
                     key={donation._id}
                     className={`donation-list-item ${selectedDonation?._id === donation._id ? 'selected' : ''}`}
                     onClick={() => {
@@ -222,6 +214,7 @@ export default function DonationMap() {
                         15
                       );
                     }}
+                    type="button"
                   >
                     <div className="list-item-header">
                       <h3>{donation.title}</h3>
@@ -242,7 +235,7 @@ export default function DonationMap() {
                         <strong>Distance:</strong> {donation.distance.toFixed(2)} km
                       </p>
                     )}
-                  </div>
+                  </button>
                 ))}
               </div>
             )}

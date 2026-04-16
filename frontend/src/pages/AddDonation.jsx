@@ -59,8 +59,8 @@ export default function AddDonation() {
         condition,
         description,
         imageUrl,
-        latitude: latitude ? parseFloat(latitude) : undefined,
-        longitude: longitude ? parseFloat(longitude) : undefined,
+        latitude: latitude ? Number.parseFloat(latitude) : undefined,
+        longitude: longitude ? Number.parseFloat(longitude) : undefined,
         address
       }, {
         headers: {
