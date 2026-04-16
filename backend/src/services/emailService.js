@@ -40,6 +40,7 @@ exports.sendVerificationEmail = async (email, token) => {
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
+    console.error("Verification email sending failed:", error);
     throw error;
   }
 };
@@ -72,6 +73,7 @@ exports.sendPasswordResetEmail = async (email, token) => {
     await transporter.sendMail(mailOptions);
     return true;
   } catch (error) {
+    console.error("Password reset email sending failed:", error);
     throw error;
   }
 };
