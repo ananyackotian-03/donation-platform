@@ -35,11 +35,11 @@ export default function Login() {
       // Redirect based on user role
       const userRole = response.data.user?.role || 'donor';
       if (userRole === 'admin') {
-        navigate('/admin');
+        navigate('/admin-dashboard');
       } else if (userRole === 'organization') {
-        navigate('/organization');
+        navigate('/org-dashboard');
       } else {
-        navigate('/donor');
+        navigate('/donor-dashboard');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');

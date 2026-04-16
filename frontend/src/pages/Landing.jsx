@@ -22,6 +22,7 @@ export default function Landing() {
       {/* Features Section */}
       <section className="features">
         <h2 className="section-title">How DaanSetu Works</h2>
+        <p className="section-subtitle">Transform unwanted items into meaningful contributions. Join thousands making a difference.</p>
         <div className="features-grid">
           <div className="feature-card">
             <div className="feature-icon">📦</div>

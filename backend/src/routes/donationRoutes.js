@@ -1,21 +1,37 @@
-const express = require("express")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const { register, login } = require("../controllers/authController")
-const authMiddleware = require("../middleware/authMiddleware")
+const {
+  createDonation,
+  getDonations,
+  getDonationById,
+  updateDonation,
+  deleteDonation,
+  getMyDonations,
+  getNearbyDonations,
+} = require("../controllers/donationController");
 
-// register
-router.post("/register", register)
+const authMiddleware = require("../middleware/authMiddleware");
 
-// login
-router.post("/login", login)
+// CREATE DONATION (protected)
+router.post("/", authMiddleware, createDonation);
 
-// protected test route
-router.get("/profile", authMiddleware, (req, res) => {
-  res.json({
-    message: "Protected route accessed",
-    user: req.user
-  })
-})
+// GET NEARBY DONATIONS
+router.get("/nearby", getNearbyDonations);
 
-module.exports = router
+// GET MY DONATIONS (protected)
+router.get("/my-donations", authMiddleware, getMyDonations);
+
+// GET ALL DONATIONS
+router.get("/", getDonations);
+
+// GET SINGLE DONATION
+router.get("/:id", getDonationById);
+
+// UPDATE DONATION (protected)
+router.put("/:id", authMiddleware, updateDonation);
+
+// DELETE DONATION (protected)
+router.delete("/:id", authMiddleware, deleteDonation);
+
+module.exports = router;

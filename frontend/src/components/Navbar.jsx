@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import NotificationBell from './NotificationBell';
 import './Navbar.css';
 
 export default function Navbar() {
@@ -9,17 +10,20 @@ export default function Navbar() {
           <span className="logo-icon">🤝</span>
           DaanSetu
         </Link>
-        <ul className="nav-links">
-          <li className="nav-item">
-            <Link to="/" className="nav-link">Home</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/login" className="nav-link">Login</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/register" className="nav-link btn-register">Register</Link>
-          </li>
-        </ul>
+        <div className="nav-section">
+          <ul className="nav-links">
+            <li className="nav-item">
+              <Link to="/" className="nav-link">Home</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/login" className="nav-link">Login</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/register" className="nav-link btn-register">Register</Link>
+            </li>
+          </ul>
+          <NotificationBell />
+        </div>
       </div>
     </nav>
   );

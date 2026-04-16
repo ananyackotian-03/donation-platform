@@ -6,7 +6,7 @@ const crypto = require("crypto");
 // ================= REGISTER =================
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -21,6 +21,7 @@ exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role: role || 'donor',
       verificationToken,
     });
 
@@ -62,7 +63,15 @@ exports.login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token });
+    res.json({ 
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
+    });
 
   } catch (err) {
     console.log(err);

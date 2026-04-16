@@ -4,14 +4,40 @@ import axios from 'axios';
 import './AddDonation.css';
 
 export default function AddDonation() {
-  const [itemName, setItemName] = useState('');
+  const [title, setTitle] = useState('');
   const [category, setCategory] = useState('books');
-  const [quantity, setQuantity] = useState('');
-  const [location, setLocation] = useState('');
+  const [condition, setCondition] = useState('like-new');
   const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+  const [address, setAddress] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [geoLoading, setGeoLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleGetLocation = () => {
+    setGeoLoading(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude: lat, longitude: lng } = position.coords;
+          setLatitude(lat.toString());
+          setLongitude(lng.toString());
+          setGeoLoading(false);
+          alert('Location captured! Latitude: ' + lat.toFixed(4) + ', Longitude: ' + lng.toFixed(4));
+        },
+        (error) => {
+          setError('Could not get your location: ' + error.message);
+          setGeoLoading(false);
+        }
+      );
+    } else {
+      setError('Geolocation is not supported by your browser');
+      setGeoLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +45,7 @@ export default function AddDonation() {
     setLoading(true);
 
     // Basic validation
-    if (!itemName || !quantity || !location) {
+    if (!title || !description) {
       setError('Please fill in all required fields');
       setLoading(false);
       return;
@@ -28,11 +54,14 @@ export default function AddDonation() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post('http://localhost:5000/api/donations', {
-        itemName,
+        title,
         category,
-        quantity: parseInt(quantity),
-        location,
-        description
+        condition,
+        description,
+        imageUrl,
+        latitude: latitude ? parseFloat(latitude) : undefined,
+        longitude: longitude ? parseFloat(longitude) : undefined,
+        address
       }, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -40,7 +69,7 @@ export default function AddDonation() {
       });
 
       alert('Donation added successfully!');
-      navigate('/my-donations');
+      navigate('/donor-dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add donation');
     } finally {
@@ -63,13 +92,13 @@ export default function AddDonation() {
 
           <form onSubmit={handleSubmit} className="donation-form">
             <div className="form-group">
-              <label htmlFor="itemName">Item Name</label>
+              <label htmlFor="title">Item Name *</label>
               <input
                 type="text"
-                id="itemName"
+                id="title"
                 placeholder="e.g., Calculus Textbook, Winter Jacket"
-                value={itemName}
-                onChange={(e) => setItemName(e.target.value)}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
               />
             </div>
@@ -91,41 +120,90 @@ export default function AddDonation() {
               </select>
             </div>
 
+            <div className="form-group">
+              <label htmlFor="condition">Condition</label>
+              <select
+                id="condition"
+                value={condition}
+                onChange={(e) => setCondition(e.target.value)}
+              >
+                <option value="like-new">Like New</option>
+                <option value="good">Good</option>
+                <option value="fair">Fair</option>
+                <option value="used">Used</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="description">Item Description *</label>
+              <textarea
+                id="description"
+                placeholder="Describe the item, its condition, and any details"
+                rows="4"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="imageUrl">Image URL</label>
+              <input
+                type="url"
+                id="imageUrl"
+                placeholder="https://example.com/image.jpg"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+            </div>
+
+            <div className="form-divider">
+              <h3>Location Information (Optional)</h3>
+              <p>Help organizations find your donation</p>
+            </div>
+
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="quantity">Quantity</label>
+                <label htmlFor="latitude">Latitude</label>
                 <input
                   type="number"
-                  id="quantity"
-                  placeholder="e.g., 5"
-                  min="1"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  required
+                  id="latitude"
+                  step="0.000001"
+                  placeholder="e.g., 28.7041"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
                 />
               </div>
-
               <div className="form-group">
-                <label htmlFor="location">Pickup Location</label>
+                <label htmlFor="longitude">Longitude</label>
                 <input
-                  type="text"
-                  id="location"
-                  placeholder="e.g., Downtown Campus"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  required
+                  type="number"
+                  id="longitude"
+                  step="0.000001"
+                  placeholder="e.g., 77.1025"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
                 />
               </div>
             </div>
 
+            <button
+              type="button"
+              className="btn-geo"
+              onClick={handleGetLocation}
+              disabled={geoLoading}
+            >
+              {geoLoading ? 'Getting Location...' : '📍 Use My Current Location'}
+            </button>
+
             <div className="form-group">
-              <label htmlFor="description">Item Description</label>
-              <textarea
-                id="description"
-                placeholder="Describe the condition and details of the item"
-                rows="4"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+              <label htmlFor="address">Address / Pickup Location</label>
+              <input
+                type="text"
+                id="address"
+                placeholder="e.g., 123 Main Street, Delhi, India"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
               />
             </div>
 

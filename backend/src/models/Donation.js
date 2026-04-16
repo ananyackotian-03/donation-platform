@@ -35,11 +35,27 @@ const donationSchema = new mongoose.Schema({
   ref: "User"
  },
 
+ // Location fields
+ latitude: {
+  type: Number
+ },
+
+ longitude: {
+  type: Number
+ },
+
+ address: {
+  type: String
+ },
+
  createdAt: {
   type: Date,
   default: Date.now
  }
 
 })
+
+// Create geospatial index for location queries
+donationSchema.index({ latitude: 1, longitude: 1 })
 
 module.exports = mongoose.model("Donation", donationSchema)

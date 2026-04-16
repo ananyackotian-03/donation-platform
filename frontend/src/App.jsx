@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import DonorDashboard from "./pages/DonorDashboard";
 import AddDonation from "./pages/AddDonation";
 import ViewDonations from "./pages/ViewDonations";
+import DonationStatus from "./pages/DonationStatus";
+import DonationMap from "./pages/DonationMap";
 import OrgDashboard from "./pages/OrgDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 
@@ -21,11 +23,13 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/donor" element={<DonorDashboard />} />
+          <Route path="/donor-dashboard" element={<DonorDashboard />} />
           <Route path="/add-donation" element={<AddDonation />} />
           <Route path="/my-donations" element={<ViewDonations />} />
-          <Route path="/organization" element={<OrgDashboard />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/donation-status" element={<DonationStatus />} />
+          <Route path="/map" element={<DonationMap />} />
+          <Route path="/org-dashboard" element={<OrgDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
       </main>
       <Footer />

@@ -30,12 +30,14 @@ export default function ViewDonations() {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Active':
-        return 'status-active';
-      case 'Requested':
+      case 'AVAILABLE':
+        return 'status-available';
+      case 'REQUESTED':
         return 'status-requested';
-      case 'Completed':
-        return 'status-completed';
+      case 'CONFIRMED':
+        return 'status-confirmed';
+      case 'DONATED':
+        return 'status-donated';
       default:
         return '';
     }
@@ -59,9 +61,9 @@ export default function ViewDonations() {
           <>
             <div className="donations-grid">
               {donations.map((donation) => (
-                <div key={donation.id} className="donation-card">
+                <div key={donation._id} className="donation-card">
                   <div className="card-header">
-                    <h3>{donation.itemName}</h3>
+                    <h3>{donation.title}</h3>
                     <span className={`status-badge ${getStatusColor(donation.status)}`}>
                       {donation.status}
                     </span>
@@ -74,19 +76,15 @@ export default function ViewDonations() {
                         <span className="value">{donation.category}</span>
                       </div>
                       <div className="info-item">
-                        <span className="label">Quantity:</span>
-                        <span className="value">{donation.quantity}</span>
+                        <span className="label">Condition:</span>
+                        <span className="value">{donation.condition}</span>
                       </div>
                     </div>
 
                     <div className="donation-info">
                       <div className="info-item">
-                        <span className="label">Location:</span>
-                        <span className="value">📍 {donation.location}</span>
-                      </div>
-                      <div className="info-item">
-                        <span className="label">Date Added:</span>
-                        <span className="value">📅 {donation.dateAdded}</span>
+                        <span className="label">Description:</span>
+                        <span className="value">{donation.description}</span>
                       </div>
                     </div>
                   </div>
