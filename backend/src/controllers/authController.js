@@ -8,6 +8,15 @@ exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
+    // Input validation
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Name, email, and password are required" });
+    }
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: "Password must be at least 8 characters" });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -41,6 +50,11 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Input validation
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -59,7 +73,7 @@ exports.login = async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id },
-      "secret123",
+      process.env.JWT_SECRET || "secret_key_change_me",
       { expiresIn: "1d" }
     );
 

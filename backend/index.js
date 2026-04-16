@@ -17,8 +17,14 @@ app.use("/api/donations", donationRoutes);
 app.use("/api/requests", requestRoutes);
 
 // DB connect
+const mongodbUri = process.env.MONGODB_URI;
+if (!mongodbUri) {
+  console.error("MONGODB_URI environment variable is not set");
+  process.exit(1);
+}
+
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/daansetu", {
+  .connect(mongodbUri, {
     serverSelectionTimeoutMS: 30000,
     socketTimeoutMS: 45000,
     connectTimeoutMS: 30000,
@@ -26,7 +32,10 @@ mongoose
     retryWrites: true,
   })
   .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log("MongoDB Connection Error:", err));
+  .catch((err) => {
+    console.error("MongoDB Connection Error:", err);
+    process.exit(1);
+  });
 
 // test route
 app.get("/", (req, res) => {
