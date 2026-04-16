@@ -1,14 +1,13 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
+const crypto = require("node:crypto");
 
 // ================= REGISTER =================
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    // Input validation
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Name, email, and password are required" });
     }
@@ -23,10 +22,9 @@ exports.register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    const user = await User.create({
+    await User.create({
       name,
       email,
       password: hashedPassword,
@@ -36,7 +34,7 @@ exports.register = async (req, res) => {
 
     res.json({
       message: "User registered",
-      verificationToken, // temporary (instead of email)
+      verificationToken,
     });
 
   } catch (err) {
@@ -49,7 +47,6 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Input validation
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
@@ -72,14 +69,14 @@ exports.login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ 
+    res.json({
       token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
 
   } catch (err) {
@@ -157,6 +154,10 @@ exports.resetPassword = async (req, res) => {
 
 // ================= PROFILE =================
 exports.getProfile = async (req, res) => {
-  const user = await User.findById(req.user.id).select("-password");
-  res.json(user);
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 };

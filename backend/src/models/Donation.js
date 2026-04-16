@@ -1,61 +1,57 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const donationSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
 
- title: {
-  type: String,
-  required: true
- },
+  description: {
+    type: String,
+    required: true,
+  },
 
- description: {
-  type: String,
-  required: true
- },
+  category: {
+    type: String,
+  },
 
- category: {
-  type: String
- },
+  condition: {
+    type: String,
+  },
 
- condition: {
-  type: String
- },
+  imageUrl: {
+    type: String,
+  },
 
- imageUrl: {
-  type: String
- },
+  status: {
+    type: String,
+    enum: ["AVAILABLE", "REQUESTED", "CONFIRMED", "DONATED"],
+    default: "AVAILABLE",
+  },
 
- status: {
-  type: String,
-  enum: ["AVAILABLE", "REQUESTED", "CONFIRMED", "DONATED"],
-  default: "AVAILABLE"
- },
+  donorId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 
- donorId: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "User"
- },
+  latitude: {
+    type: Number,
+  },
 
- // Location fields
- latitude: {
-  type: Number
- },
+  longitude: {
+    type: Number,
+  },
 
- longitude: {
-  type: Number
- },
+  address: {
+    type: String,
+  },
 
- address: {
-  type: String
- },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
- createdAt: {
-  type: Date,
-  default: Date.now
- }
+donationSchema.index({ latitude: 1, longitude: 1 });
 
-})
-
-// Create geospatial index for location queries
-donationSchema.index({ latitude: 1, longitude: 1 })
-
-module.exports = mongoose.model("Donation", donationSchema)
+module.exports = mongoose.model("Donation", donationSchema);
