@@ -126,8 +126,3 @@ exports.getNotifications = async (req, res) => {
     })
   }
 }
-      message: "Server error",
-      error
-    })
-  }
-}
