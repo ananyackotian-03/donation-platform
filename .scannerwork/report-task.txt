@@ -2,5 +2,5 @@ projectKey=donation-platform
 serverUrl=http://localhost:9000
 serverVersion=26.4.0.121862
 dashboardUrl=http://localhost:9000/dashboard?id=donation-platform
-ceTaskId=810cfbc5-1818-4749-8d8d-56a67ee786ef
-ceTaskUrl=http://localhost:9000/api/ce/task?id=810cfbc5-1818-4749-8d8d-56a67ee786ef
+ceTaskId=2c2852b9-23d1-4af6-8753-94a9ed6acb59
+ceTaskUrl=http://localhost:9000/api/ce/task?id=2c2852b9-23d1-4af6-8753-94a9ed6acb59
