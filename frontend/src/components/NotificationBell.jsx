@@ -16,7 +16,6 @@ export default function NotificationBell() {
   useEffect(() => {
     if (token && user.id) {
       fetchNotifications();
-      // Refresh notifications every 5 seconds
       const interval = setInterval(fetchNotifications, 5000);
       return () => clearInterval(interval);
     }
@@ -42,9 +41,7 @@ export default function NotificationBell() {
 
   const handleNotificationClick = (request) => {
     setShowDropdown(false);
-    // Navigate to donation details or dashboard
     navigate(`/donor-dashboard#donation-${request.donationId}`);
-    // Scroll to the donation in the dashboard
     setTimeout(() => {
       const donationElement = document.getElementById(`donation-${request.donationId}`);
       if (donationElement) {
@@ -137,18 +134,11 @@ export default function NotificationBell() {
       </div>
 
       {showDropdown && (
-        <div 
+        <button 
           className="notification-backdrop"
           onClick={() => setShowDropdown(false)}
-          role="button"
-          tabIndex={0}
           aria-label="Close notification menu"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              setShowDropdown(false);
-            }
-          }}
+          type="button"
         />
       )}
     </div>
