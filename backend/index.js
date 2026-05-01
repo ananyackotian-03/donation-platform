@@ -17,9 +17,9 @@ app.use("/api/donations", donationRoutes);
 app.use("/api/requests", requestRoutes);
 
 // DB connect
-const mongodbUri = process.env.MONGODB_URI;
+const mongodbUri = process.env.MONGO_URI;
 if (!mongodbUri) {
-  console.error("MONGODB_URI environment variable is not set");
+  console.error("MONGO_URI environment variable is not set");
   process.exit(1);
 }
 
